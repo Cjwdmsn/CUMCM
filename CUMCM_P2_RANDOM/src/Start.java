@@ -1,59 +1,44 @@
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
 public class Start {
     public static void main(String[] args) {
+        ArrayList<Integer> CNCsCount = new ArrayList<>();
+        ArrayList<ArrayList<Integer>> allArrangements = new ArrayList<>();
+        Map<ArrayList<Integer>, Integer> allArrangementResults = new HashMap<>();
+
         for(int i = 0; i < Constraint.CNCS_COUNT_ONE_ROW * 2; i++) {
-            for(int j = i; j < Constraint.CNCS_COUNT_ONE_ROW * 2; j++) {
-                for(int k = 1; k < Constraint.CNCS_COUNT_ONE_ROW * 2; k++) {
-                    int[] secondStepCNCIndexs = new int[k];
-                    for(int l = 0; l < k; l++) {
-                        secondStepCNCIndexs[l] = j + l;
-                    }
+            CNCsCount.add(i);
+        }
 
-                    CNC[] CNCs = createCNCs(secondStepCNCIndexs);
+        for(int i = 0; i < Constraint.CNCS_COUNT_ONE_ROW * 2; i++) {
+            generateAllStepTwoCNCsArrangement(CNCsCount, new ArrayList<>(), allArrangements, allArrangementResults, i);
+        }
 
-                    int remainingTime = Constraint.SHIFT_TIME;
-                    int nProducts = 0;
-                    RGV rgv = new RGV();
-
-                    while(remainingTime > 0) {
-                        remainingTime = rgv.process(CNCs, remainingTime);
-                    }
-
-                    for (CNC CNC : CNCs) {
-                        if (!CNC.isForFirstStep()) {
-                            nProducts += CNC.getNProducts();
-                        }
-                    }
-
-                    for(Integer m : secondStepCNCIndexs) {
-                        System.out.print(m + " ");
-                    }
-                    System.out.print(": ");
-                    System.out.print(nProducts);
-                    System.out.println();
-                }
+        ArrayList<ArrayList<Integer>> optimizedArrangements = new ArrayList<>();
+        int maxProductsCount = -1;
+        for(ArrayList<Integer> arrayLists : allArrangements) {
+            if(allArrangementResults.get(arrayLists) > maxProductsCount) {
+                optimizedArrangements.clear();
+                optimizedArrangements.add(arrayLists);
+                maxProductsCount = allArrangementResults.get(arrayLists);
+            } else if(allArrangementResults.get(arrayLists) == maxProductsCount) {
+                optimizedArrangements.add(arrayLists);
             }
         }
 
-        /*CNC[] CNCs = createCNCs(new int[]{0, 1, 2, 3, 4, 5, 6});
-
-        int remainingTime = Constraint.SHIFT_TIME;
-        int nProducts = 0;
-        RGV rgv = new RGV();
-
-        while(remainingTime > 0) {
-            remainingTime = rgv.process(CNCs, remainingTime);
-        }
-
-        for (CNC CNC : CNCs) {
-            if (!CNC.isForFirstStep()) {
-                nProducts += CNC.getNProducts();
+        System.out.println("\nOptimized step two CNCs arrangement: ");
+        for(ArrayList<Integer> arrayList : optimizedArrangements) {
+            for(Integer i : arrayList) {
+                System.out.print(i + " ");
             }
+            System.out.print(": " + allArrangementResults.get(arrayList));
+            System.out.println();
         }
-
-        System.out.println(nProducts);*/
     }
 
-    private static CNC[] createCNCs(int[] secondStepCNCIndexes) {
+    private static CNC[] createCNCs(ArrayList<Integer> secondStepCNCIndexes) {
         CNC[] cncs = new CNC[8];
         for (int secondStepCNCIndex : secondStepCNCIndexes) {
             CNC cnc = new CNC(CNC.GIVE_SOMETHING_SECOND_TIME);
@@ -69,5 +54,58 @@ public class Start {
         }
 
         return cncs;
+    }
+
+    private static void generateAllStepTwoCNCsArrangement(ArrayList<Integer> CNCsIndexes, ArrayList<Integer> stepTwoCNCsArrangement,
+                                                          ArrayList<ArrayList<Integer>> allArangements,
+                                                          Map<ArrayList<Integer>, Integer> allArrangementResults,
+                                                          int stepTwoCNCsCount) {
+        ArrayList<Integer> identicalCNCsIndexes;
+        ArrayList<Integer> identicalStepTwoCNCsArrangement;
+
+        if(stepTwoCNCsArrangement.size() == stepTwoCNCsCount) {
+            CNC[] CNCs = createCNCs(stepTwoCNCsArrangement);
+
+            int remainingTime = Constraint.SHIFT_TIME;
+            int nProducts = 0;
+            RGV rgv = new RGV();
+
+            while(remainingTime > 0) {
+                remainingTime = rgv.process(CNCs, remainingTime);
+            }
+
+            System.out.print("Arrangement: ");
+            for(Integer i : stepTwoCNCsArrangement) {
+                System.out.print(i + " ");
+            }
+
+            System.out.print(": ");
+
+            for (CNC CNC : CNCs) {
+                if (!CNC.isForFirstStep()) {
+                    nProducts += CNC.getNProducts();
+                }
+            }
+
+            allArangements.add(stepTwoCNCsArrangement);
+            allArrangementResults.put(stepTwoCNCsArrangement, nProducts);
+
+            System.out.print(nProducts);
+            System.out.println();
+        } else {
+            for(int i = 0; i < CNCsIndexes.size(); i++) {
+                identicalCNCsIndexes = new ArrayList<>(CNCsIndexes);
+                identicalStepTwoCNCsArrangement = new ArrayList<>(stepTwoCNCsArrangement);
+
+                identicalStepTwoCNCsArrangement.add(identicalCNCsIndexes.get(i));
+
+                for(int j = i; j >=  0; j--) {
+                    identicalCNCsIndexes.remove(j);
+                }
+
+                generateAllStepTwoCNCsArrangement(identicalCNCsIndexes, identicalStepTwoCNCsArrangement,
+                        allArangements, allArrangementResults, stepTwoCNCsCount);
+            }
+        }
     }
 }
