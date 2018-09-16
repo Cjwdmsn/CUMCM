@@ -30,9 +30,6 @@ class RGV {
             }
         }
 
-        System.out.println("Shortest index: " + shortestTimeForDoingNextStepCNCIndex);
-        System.out.println("Is fast? " + (shortestTimeForDoingNextStepCNCIndex < 4));
-        System.out.println("Shortest time: " + shortestTimeForDoingNextStep);
         if(remainingTime < shortestTimeForDoingNextStep) {
             return 0;
         }
@@ -44,7 +41,6 @@ class RGV {
         //更新RGV位置
         position = shortestTimeForDoingNextStepCNCIndex % Constraint.CNCS_COUNT_ONE_ROW;
 
-        System.out.println("Now is: " + remainingTime + " Position: " + position);
         return remainingTime - shortestTimeForDoingNextStep;
     }
 
@@ -81,8 +77,6 @@ class RGV {
                         CNCs[i].setTimeForDoingNextStep(moveTime + GIVE_OR_EJECT_SOMETHING_TO_FAST_CNC * 2 + WASH);
                         break;
                 }
-                System.out.println("Fast Position: " + i + " Next step time: " + CNCs[i].getTimeForDoingNextStep()
-                        + " Processing remaining time: " + CNCs[i].getProcessRemainingTime() + " Next step: " + CNCs[i].getNextStep());
             } else {
                 switch (CNCs[i].getNextStep()) {
                     case CNC.GIVE_SOMETHING:
@@ -96,9 +90,6 @@ class RGV {
                         CNCs[i].setTimeForDoingNextStep(moveTime + GIVE_OR_EJECT_SOMETHING_TO_SLOW_CNC * 2 + WASH);
                         break;
                 }
-
-                System.out.println("Slow Position: " + i + " Next step time: " + CNCs[i].getTimeForDoingNextStep()
-                        + " Processing remaining time: " + CNCs[i].getProcessRemainingTime() + " Next step: " + CNCs[i].getNextStep());
             }
         }
     }
