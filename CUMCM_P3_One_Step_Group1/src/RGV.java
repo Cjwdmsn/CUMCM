@@ -248,6 +248,7 @@ class RGV {
                 }
                 break;
             case CNC.REPAIRED:
+                cnc.setProcessRemainingTime(0);
                 cnc.setNextStep(CNC.GIVE_SOMETHING);
                 break;
         }
