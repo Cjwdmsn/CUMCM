@@ -2,21 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c06f9db5-c3b2-45e3-a61c-47a814197e89" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../CUMCM_P3_One_Step_Group1/out/production/CUMCM_P3_One_Step_Group1/RGV.class" afterPath="$PROJECT_DIR$/../CUMCM_P3_One_Step_Group1/out/production/CUMCM_P3_One_Step_Group1/RGV.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../CUMCM_P3_One_Step_Group2/out/production/CUMCM_P3_One_Step_Group2/RGV.class" afterPath="$PROJECT_DIR$/../CUMCM_P3_One_Step_Group2/out/production/CUMCM_P3_One_Step_Group2/RGV.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../CUMCM_P3_One_Step_Group3/out/production/CUMCM_P3_One_Step_Group3/RGV.class" afterPath="$PROJECT_DIR$/../CUMCM_P3_One_Step_Group3/out/production/CUMCM_P3_One_Step_Group3/RGV.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../CUMCM_P1_Group1/.idea/workspace.xml" afterPath="$PROJECT_DIR$/../CUMCM_P1_Group1/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../CUMCM_P1_Group2/.idea/workspace.xml" afterPath="$PROJECT_DIR$/../CUMCM_P1_Group2/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../CUMCM_P2_Group1/.idea/workspace.xml" afterPath="$PROJECT_DIR$/../CUMCM_P2_Group1/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../CUMCM_P2_Group2/.idea/workspace.xml" afterPath="$PROJECT_DIR$/../CUMCM_P2_Group2/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../CUMCM_P1_Group1/src/RGV.java" afterPath="$PROJECT_DIR$/../CUMCM_P1_Group1/src/RGV.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../CUMCM_P1_Group2/src/RGV.java" afterPath="$PROJECT_DIR$/../CUMCM_P1_Group2/src/RGV.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../CUMCM_P1_Group3/src/RGV.java" afterPath="$PROJECT_DIR$/../CUMCM_P1_Group3/src/RGV.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../CUMCM_P2_Group3/.idea/workspace.xml" afterPath="$PROJECT_DIR$/../CUMCM_P2_Group3/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../CUMCM_P3_One_Step_Group1/.idea/workspace.xml" afterPath="$PROJECT_DIR$/../CUMCM_P3_One_Step_Group1/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../CUMCM_P3_One_Step_Group1/src/RGV.java" afterPath="$PROJECT_DIR$/../CUMCM_P3_One_Step_Group1/src/RGV.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../CUMCM_P3_One_Step_Group2/.idea/workspace.xml" afterPath="$PROJECT_DIR$/../CUMCM_P3_One_Step_Group2/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../CUMCM_P3_One_Step_Group2/src/RGV.java" afterPath="$PROJECT_DIR$/../CUMCM_P3_One_Step_Group2/src/RGV.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../CUMCM_P3_One_Step_Group3/.idea/workspace.xml" afterPath="$PROJECT_DIR$/../CUMCM_P3_One_Step_Group3/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../CUMCM_P3_One_Step_Group3/src/RGV.java" afterPath="$PROJECT_DIR$/../CUMCM_P3_One_Step_Group3/src/RGV.java" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -153,7 +146,7 @@
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.0" />
     <property name="project.structure.side.proportion" value="0.0" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../CUMCM_P3_One_Step_Group1" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../CUMCM_P3_One_Step_Group3" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">

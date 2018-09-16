@@ -22,7 +22,7 @@ class RGV {
         int shortestTimeForDoingNextStep = CNCs[0].getTimeForDoingNextStep();
         int shortestTimeForDoingNextStepCNCIndex = 0;
 
-        //Find the shortest next step time and its corresponding CNC index
+        //找出下一步工作时间最短的CNC及其位置，并将这两个值存入变量shortestTimeForDoingNextStep，shortestTimeForDoingNextStepCNCIndex
         for(int i = 0; i < CNCs.length; i++) {
             if(CNCs[i].getTimeForDoingNextStep() < shortestTimeForDoingNextStep) {
                 shortestTimeForDoingNextStep = CNCs[i].getTimeForDoingNextStep();
