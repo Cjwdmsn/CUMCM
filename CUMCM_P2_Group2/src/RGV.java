@@ -2,17 +2,17 @@ import java.util.ArrayList;
 
 class RGV {
     //RGV移动一个单位所需要的时间
-    private static final int MOVE_ONCE = 20;
+    private static final int MOVE_ONCE = 23;
     //RGV移动两个单位所需要的时间
-    private static final int MOVE_TWICE = 33;
+    private static final int MOVE_TWICE = 41;
     //RGV移动三个单位所需要的时间
-    private static final int MOVE_THIRD_TIMES = 46;
+    private static final int MOVE_THIRD_TIMES = 59;
     //RGV放置或取出CNC所需要的时间（快速）
-    private static final int GIVE_OR_EJECT_SOMETHING_TO_FAST_CNC = 28;
+    private static final int GIVE_OR_EJECT_SOMETHING_TO_FAST_CNC = 30;
     //RGV放置或取出CNC所需要的时间（慢速）
-    private static final int GIVE_OR_EJECT_SOMETHING_TO_SLOW_CNC = 31;
+    private static final int GIVE_OR_EJECT_SOMETHING_TO_SLOW_CNC = 35;
     //RGV清洗产品所需要的时间
-    private static final int WASH = 25;
+    private static final int WASH = 30;
 
     //记录RGV的当前位置
     private int position = 0;
