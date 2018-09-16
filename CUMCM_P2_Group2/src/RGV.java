@@ -1,14 +1,16 @@
+import java.util.ArrayList;
+
 class RGV {
     //RGV移动一个单位所需要的时间
-    private static final int MOVE_ONCE = 18;
+    private static final int MOVE_ONCE = 20;
     //RGV移动两个单位所需要的时间
-    private static final int MOVE_TWICE = 32;
+    private static final int MOVE_TWICE = 33;
     //RGV移动三个单位所需要的时间
     private static final int MOVE_THIRD_TIMES = 46;
     //RGV放置或取出CNC所需要的时间（快速）
-    private static final int GIVE_OR_EJECT_SOMETHING_TO_FAST_CNC = 27;
+    private static final int GIVE_OR_EJECT_SOMETHING_TO_FAST_CNC = 28;
     //RGV放置或取出CNC所需要的时间（慢速）
-    private static final int GIVE_OR_EJECT_SOMETHING_TO_SLOW_CNC = 32;
+    private static final int GIVE_OR_EJECT_SOMETHING_TO_SLOW_CNC = 31;
     //RGV清洗产品所需要的时间
     private static final int WASH = 25;
 
@@ -16,6 +18,12 @@ class RGV {
     private int position = 0;
     //记录RGV的手上是否有中间产品
     private boolean hasIntermediateProductOnHand = false;
+
+    private ArrayList<ArrayList<CNCLog>> cncLogs;
+
+    RGV(ArrayList<ArrayList<CNCLog>> cncLogs) {
+        this.cncLogs = cncLogs;
+    }
 
     //进行RGV操作
     int process(CNC[] CNCs, int remainingTime) {
@@ -62,15 +70,9 @@ class RGV {
         //时间流逝
         timeLapse(CNCs, shortestTimeForDoingNextStepCNCIndex, remainingTime, shortestTimeForDoingNextStep);
 
-        //System.out.println("Position now: " + position);
-
         //更新RGV位置
         position = shortestTimeForDoingNextStepCNCIndex % Constraint.CNCS_COUNT_ONE_ROW;
 
-        /*System.out.println("Shortest next step time: " + shortestTimeForDoingNextStep);
-        System.out.println("Next position: " + position);
-        System.out.println("Remaining time: " + remainingTime);
-        System.out.println("Has something on hand? " + hasIntermediateProductOnHand);*/
         //返回剩余时间
         return remainingTime - shortestTimeForDoingNextStep;
     }
@@ -199,9 +201,6 @@ class RGV {
                     }
                     break;
             }
-            /*System.out.println("Is step two CNC? " + !CNCs[i].isForFirstStep() + " Position: " + i % Constraint.CNCS_COUNT_ONE_ROW
-                    + " Next step time: " + CNCs[i].getTimeForDoingNextStep()
-                    + " Processing remaining time: " + CNCs[i].getProcessRemainingTime() + " Next step: " + CNCs[i].getNextStep());*/
         }
     }
 
@@ -216,8 +215,6 @@ class RGV {
                         //当该CNC在时间流逝之后刚好能完成操作，或在时间流逝中就能完成操作，则将该CNC的下一步操作改为EJECT
                         CNCs[i].setProcessRemainingTime(0);
                         CNCs[i].setNextStep(CNC.EJECT_FROM_FIRST_STEP_CNC);
-                        /*System.out.print(" First step finish time: " + (time - CNCs[i].getProcessRemainingTime()));
-                        System.out.println("First step finish " + i);*/
                     } else {
                         //仅更新操作剩余时间，不需更新状态，因为流逝的时间不足以让该CNC完成操作
                         CNCs[i].setProcessRemainingTime(CNCs[i].getProcessRemainingTime() - shortestElapsedTime);
@@ -227,8 +224,6 @@ class RGV {
                         //当该CNC在时间流逝之后刚好能完成操作，或在时间流逝中就能完成操作，则将该CNC的下一步操作改为EJECT_AND_WASH
                         CNCs[i].setProcessRemainingTime(0);
                         CNCs[i].setNextStep(CNC.EJECT_AND_WASH);
-                        /*System.out.print(" Second step finish time: " + (time - CNCs[i].getProcessRemainingTime()));
-                        System.out.println("Second step finish " + i);*/
                     } else {
                         //仅更新操作剩余时间，不需更新状态，因为流逝的时间不足以让该CNC完成操作
                         CNCs[i].setProcessRemainingTime(CNCs[i].getProcessRemainingTime() - shortestElapsedTime);
@@ -246,16 +241,37 @@ class RGV {
                 cnc.setProcessRemainingTime(CNC.PROCESS_FOR_TWO_FIRST_STEP);
                 hasIntermediateProductOnHand = false;
 
-                /*System.out.print(" First step start time: " + time);
-                System.out.println("First step start " + cnc.getPosition());*/
+                CNCLog cncLog = new CNCLog();
+                cncLog.setTime(time);
+                cncLog.setOperation(CNC.GIVE_SOMETHING_FIRST_TIME);
+                cncLog.setIndex(cncIndex);
+                cncLog.setIsFirstStepCNC(true);
+                cncLogs.get(cncIndex).add(cncLog);
+
                 break;
             case CNC.FINISH_PROCESSING_FIRST_TIME:
                 //此时该CNC正在加工产品
                 cnc.setProcessRemainingTime(CNC.PROCESS_FOR_TWO_FIRST_STEP);
                 hasIntermediateProductOnHand = true;
 
-                /*System.out.print(" First step finish time: " + time);
-                System.out.println("First step finish " + cnc.getPosition());*/
+                CNCLog cncLog1 = new CNCLog();
+                cncLog1.setTime(time);
+                cncLog1.setOperation(CNC.EJECT_FROM_FIRST_STEP_CNC);
+                cncLog1.setIndex(cncIndex);
+                cncLog1.setIsFirstStepCNC(true);
+                cncLogs.get(cncIndex).add(cncLog1);
+
+                CNCLog cncLogGive = new CNCLog();
+                if(cncIndex >= Constraint.CNCS_COUNT_ONE_ROW) {
+                    cncLogGive.setTime(time - RGV.GIVE_OR_EJECT_SOMETHING_TO_SLOW_CNC);
+                } else {
+                    cncLogGive.setTime(time - RGV.GIVE_OR_EJECT_SOMETHING_TO_FAST_CNC);
+                }
+                cncLogGive.setOperation(CNC.GIVE_SOMETHING_FIRST_TIME);
+                cncLogGive.setIndex(cncIndex);
+                cncLogGive.setIsFirstStepCNC(true);
+                cncLogs.get(cncIndex).add(cncLogGive);
+
                 break;
             case CNC.EJECT_FROM_FIRST_STEP_CNC:
                 //此时该CNC已经加工完成
@@ -263,48 +279,114 @@ class RGV {
                 cnc.setProcessRemainingTime(CNC.PROCESS_FOR_TWO_FIRST_STEP);
                 hasIntermediateProductOnHand = true;
 
-                //System.out.println("First step start " + cnc.getPosition());
+                CNCLog cncLog2 = new CNCLog();
+                cncLog2.setTime(time);
+                cncLog2.setOperation(CNC.EJECT_FROM_FIRST_STEP_CNC);
+                cncLog2.setIndex(cncIndex);
+                cncLog2.setIsFirstStepCNC(true);
+                cncLogs.get(cncIndex).add(cncLog2);
+
+                CNCLog cncLogGive1 = new CNCLog();
+                if(cncIndex >= Constraint.CNCS_COUNT_ONE_ROW) {
+                    cncLogGive1.setTime(time - RGV.GIVE_OR_EJECT_SOMETHING_TO_SLOW_CNC);
+                } else {
+                    cncLogGive1.setTime(time - RGV.GIVE_OR_EJECT_SOMETHING_TO_FAST_CNC);
+                }
+                cncLogGive1.setOperation(CNC.GIVE_SOMETHING_FIRST_TIME);
+                cncLogGive1.setIndex(cncIndex);
+                cncLogGive1.setIsFirstStepCNC(true);
+                cncLogs.get(cncIndex).add(cncLogGive1);
+
                 break;
             case CNC.GIVE_SOMETHING_SECOND_TIME:
                 //此时该CNC等待被放入中间产品
                 cnc.setNextStep(CNC.FINISH_PROCESSING_SECOND_TIME);
                 cnc.setProcessRemainingTime(CNC.PROCESS_FOR_TWO_SECOND_STEP);
-                //cnc.setLastStepCNCIndex(lastStepCNCIndex);
 
                 hasIntermediateProductOnHand = false;
 
-                /*System.out.print(" Last step CNC index " + lastStepCNCIndex + ". Second step start time: " + time);
-                System.out.println("Second step start " + cnc.getPosition());*/
+                CNCLog cncLog3 = new CNCLog();
+                cncLog3.setTime(time);
+                cncLog3.setOperation(CNC.GIVE_SOMETHING_SECOND_TIME);
+                cncLog3.setIndex(cncIndex);
+                cncLog3.setIsFirstStepCNC(false);
+                cncLogs.get(cncIndex).add(cncLog3);
+
                 break;
             case CNC.FINISH_PROCESSING_SECOND_TIME:
                 //此时该CNC正在操作中间产品
                 if(hasIntermediateProductOnHand) {
                     cnc.setNextStep(CNC.FINISH_PROCESSING_SECOND_TIME);
                     cnc.setProcessRemainingTime(CNC.PROCESS_FOR_TWO_SECOND_STEP);
+
+                    CNCLog cncLog4 = new CNCLog();
+                    cncLog4.setTime(time);
+                    cncLog4.setOperation(CNC.EJECT_FROM_FIRST_STEP_CNC);
+                    cncLog4.setIndex(cncIndex);
+                    cncLog4.setIsFirstStepCNC(false);
+                    cncLogs.get(cncIndex).add(cncLog4);
+
+                    CNCLog cncLogGive2 = new CNCLog();
+                    if(cncIndex >= Constraint.CNCS_COUNT_ONE_ROW) {
+                        cncLogGive2.setTime(time - RGV.GIVE_OR_EJECT_SOMETHING_TO_SLOW_CNC);
+                    } else {
+                        cncLogGive2.setTime(time - RGV.GIVE_OR_EJECT_SOMETHING_TO_FAST_CNC);
+                    }
+                    cncLogGive2.setOperation(CNC.GIVE_SOMETHING_SECOND_TIME);
+                    cncLogGive2.setIndex(cncIndex);
+                    cncLogGive2.setIsFirstStepCNC(false);
+                    cncLogs.get(cncIndex).add(cncLogGive2);
                 } else {
                     cnc.setNextStep(CNC.GIVE_SOMETHING_SECOND_TIME);
                     cnc.setProcessRemainingTime(0);
+
+                    CNCLog cncLog4 = new CNCLog();
+                    cncLog4.setTime(time);
+                    cncLog4.setOperation(CNC.EJECT_FROM_FIRST_STEP_CNC);
+                    cncLog4.setIndex(cncIndex);
+                    cncLog4.setIsFirstStepCNC(false);
+                    cncLogs.get(cncIndex).add(cncLog4);
                 }
                 cnc.setNProducts(cnc.getNProducts() + 1);
-
                 hasIntermediateProductOnHand = false;
 
-                /*System.out.print(" Last step CNC index " + lastStepCNCIndex + ". Second step finish time: " + time);
-                System.out.println("Second step finish " + cnc.getPosition());*/
                 break;
             case CNC.EJECT_AND_WASH:
                 //此时该CNC已完成处理中间产品
                 if(hasIntermediateProductOnHand) {
                     cnc.setNextStep(CNC.FINISH_PROCESSING_SECOND_TIME);
                     cnc.setProcessRemainingTime(CNC.PROCESS_FOR_TWO_SECOND_STEP);
+
+                    CNCLog cncLog5 = new CNCLog();
+                    cncLog5.setTime(time);
+                    cncLog5.setOperation(CNC.EJECT_AND_WASH);
+                    cncLog5.setIndex(cncIndex);
+                    cncLog5.setIsFirstStepCNC(false);
+                    cncLogs.get(cncIndex).add(cncLog5);
+
+                    CNCLog cncLogGive3 = new CNCLog();
+                    if(cncIndex >= Constraint.CNCS_COUNT_ONE_ROW) {
+                        cncLogGive3.setTime(time - RGV.GIVE_OR_EJECT_SOMETHING_TO_SLOW_CNC);
+                    } else {
+                        cncLogGive3.setTime(time - RGV.GIVE_OR_EJECT_SOMETHING_TO_FAST_CNC);
+                    }
+                    cncLogGive3.setOperation(CNC.GIVE_SOMETHING_SECOND_TIME);
+                    cncLogGive3.setIndex(cncIndex);
+                    cncLogGive3.setIsFirstStepCNC(false);
+                    cncLogs.get(cncIndex).add(cncLogGive3);
                 } else {
                     cnc.setNextStep(CNC.GIVE_SOMETHING_SECOND_TIME);
                     cnc.setProcessRemainingTime(0);
+
+                    CNCLog cncLog5 = new CNCLog();
+                    cncLog5.setTime(time);
+                    cncLog5.setOperation(CNC.EJECT_AND_WASH);
+                    cncLog5.setIndex(cncIndex);
+                    cncLog5.setIsFirstStepCNC(false);
+                    cncLogs.get(cncIndex).add(cncLog5);
                 }
                 cnc.setNProducts(cnc.getNProducts() + 1);
                 hasIntermediateProductOnHand = false;
-
-                //System.out.println("Second step finish " + cnc.getPosition());
         }
     }
 }

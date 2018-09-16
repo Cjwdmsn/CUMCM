@@ -1,8 +1,8 @@
 class CNC {
     //CNC第一步操作所需的时间
-    static final int PROCESS_FOR_TWO_FIRST_STEP = 455;
+    static final int PROCESS_FOR_TWO_FIRST_STEP = 400;
     //CNC第二步操作所需的时间
-    static final int PROCESS_FOR_TWO_SECOND_STEP = 182;
+    static final int PROCESS_FOR_TWO_SECOND_STEP = 378;
 
     //第一步操作CNC的下一步操作为等待被给生料
     static final int GIVE_SOMETHING_FIRST_TIME = 0;
