@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Comparator;
 
 public class Start {
     public static void main(String[] args) {
@@ -54,12 +53,7 @@ public class Start {
             allLogs.addAll(cncLogs1);
         }
 
-        allLogs.sort(new Comparator<CNCLog>() {
-            @Override
-            public int compare(CNCLog cncLog, CNCLog t1) {
-                return Integer.compare(t1.getTime(), cncLog.getTime());
-            }
-        });
+        allLogs.sort((cncLog, t1) -> Integer.compare(t1.getTime(), cncLog.getTime()));
 
         for (CNCLog cncLog : allLogs) {
             String operation = "";
